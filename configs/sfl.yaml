@@ -18,4 +18,4 @@ eval:
   eval_freq: 128
 learning:
   num_steps: 256
-seed: 4
+seed: 4 

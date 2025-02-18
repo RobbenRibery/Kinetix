@@ -818,7 +818,6 @@ def main(config):
         axes = axes.flatten()
         all_imgs = jax.vmap(render_fn)(states)
         for i, ax in enumerate(axes):
-            # ax.imshow(train_state.plr_buffer.get_sample(i))
             score = learnability[i]
             ax.imshow(all_imgs[i] / 255.0)
             ax.set_xticks([])
@@ -828,8 +827,16 @@ def main(config):
 
         plt.tight_layout()
         fig.canvas.draw()
-        im = Image.frombytes("RGB", fig.canvas.get_width_height(), fig.canvas.tostring_rgb())
+        # Replace the deprecated tostring_rgb() with buffer_rgba()
+        data = np.frombuffer(fig.canvas.buffer_rgba(), dtype=np.uint8)
+        # Reshape the data to match the expected format
+        width, height = fig.canvas.get_width_height()
+        data = data.reshape((height, width, 4))
+        # Convert RGBA to RGB
+        data = data[:, :, :3]
+        im = Image.fromarray(data)
         plt.close()
+
         return {"maps": wandb.Image(im)}
 
     @jax.jit
