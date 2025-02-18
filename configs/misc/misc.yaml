@@ -1,4 +1,4 @@
-group: "auto"
+group: "sfl-reproduce"
 group_auto_prefix: ""
 save_path: "checkpoints/kinetix"
 use_wandb: true
