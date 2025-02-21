@@ -1,8 +1,8 @@
 use_accel: true
 exploratory_grad_updates: true
-num_edits: 5
+num_edits: 3
 score_function: MaxMC
-level_buffer_capacity: 4000
+level_buffer_capacity: 8000
 replay_prob: 0.5
 staleness_coeff: 0.3
 temperature: 1.0

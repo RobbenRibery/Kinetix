@@ -4,10 +4,10 @@ defaults:
     - ppo-base
     - ppo-ued
   - misc: misc
-  - env_size: s
-  - eval: s
-  - eval_env_size: s
-  - ued: plr
+  - env_size: m
+  - eval: m
+  - eval_env_size: m
+  - ued: accel
   - train_levels: random
   - model: 
     - model-base

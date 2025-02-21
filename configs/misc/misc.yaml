@@ -1,9 +1,9 @@
-group: "sfl-reproduce"
+group: "accel-reproduce"
 group_auto_prefix: ""
-save_path: "checkpoints/kinetix"
+save_path: "checkpoints/kinetix/accel"
 use_wandb: true
 save_policy: true
-wandb_project: "kinetix-experiments"
+wandb_project: "kinetix-accel"
 wandb_entity: null
 wandb_mode : online
 video_frequency: 10
