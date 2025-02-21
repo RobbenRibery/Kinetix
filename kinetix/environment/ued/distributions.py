@@ -305,7 +305,7 @@ def create_random_starting_distribution(
         max_shape_size=static_env_params.max_shape_size * 1.0, goal_body_size_factor=1.0
     )
 
-    state = create_empty_env(env_params, static_env_params)
+    state = create_empty_env(static_env_params)
 
     def _get_ued_params(rng):
         rng, _rng, _rng2 = jax.random.split(rng, 3)
