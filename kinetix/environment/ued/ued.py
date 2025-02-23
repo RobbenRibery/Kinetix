@@ -148,7 +148,7 @@ def make_mutate_env_with_mmp(static_env_params: StaticEnvParams, params: EnvPara
             # Use jax.lax.switch to select the mutator 
             # function based on the index
             new_env = jax.lax.switch(
-                jnp.random.randint(arng, (), 0, len(editors)), 
+                jax.random.randint(arng, (), 0, len(editors)), 
                 editors,
                 *(
                     arng, 
