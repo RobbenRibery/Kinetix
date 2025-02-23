@@ -1,6 +1,7 @@
 use_accel: true
 exploratory_grad_updates: true
 num_edits: 3
+edit_method: mmp
 score_function: MaxMC
 level_buffer_capacity: 8000
 replay_prob: 0.5

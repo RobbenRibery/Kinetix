@@ -38,6 +38,14 @@ from kinetix.environment.ued.mutators import (
     mutate_remove_thruster,
     mutate_change_gravity,
 )
+from kinetix.environment.ued.editor_o3_mini_8inner_v1 import (
+    mmp_cluster_shapes,
+    mmp_increase_spacing,
+    mmp_reduce_density,
+    mmp_increase_density,
+    mmp_disable_motor_auto,
+    mmp_enable_motor_auto,
+)
 from kinetix.environment.ued.ued_state import UEDParams
 from kinetix.environment.utils import permute_pcg_state
 from kinetix.pcg.pcg import env_state_to_pcg_state, sample_pcg_state
@@ -112,6 +120,58 @@ def make_mutate_env(static_env_params: StaticEnvParams, params: EnvParams, ued_p
         return level
 
     return mutate_level
+
+
+def make_mutate_env_with_mmp(static_env_params: StaticEnvParams, params: EnvParams, ued_params: UEDParams):
+
+    editors = [
+        mmp_cluster_shapes,
+        mmp_increase_spacing,
+        mmp_reduce_density,
+        mmp_increase_density,
+        mmp_disable_motor_auto,
+        mmp_enable_motor_auto,
+    ]
+    
+    def perform_random_edit_seqs(
+        rng:chex.PRNGKey, 
+        env_state:EnvState,
+        n = 1,
+    ) -> EnvState:
+        def _step_fn(carry, _ ):
+
+            rng, current_env = carry
+            
+            # Split the RNG for the next step
+            rng, arng = jax.random.split(rng)
+
+            # Use jax.lax.switch to select the mutator 
+            # function based on the index
+            new_env = jax.lax.switch(
+                jnp.random.randint(arng, (), 0, len(editors)), 
+                editors,
+                *(
+                    arng, 
+                    current_env, 
+                ),
+            )
+            # Return the new carry (rng, new_env) and
+            # the mutated environment for tracking
+            return (rng, new_env,), new_env
+        
+        initial_carry = (rng, env_state)
+        final_carry, _ = jax.lax.scan(
+            _step_fn, 
+            initial_carry, 
+            None,
+            length=n,
+        )
+        _, new_env_state = final_carry
+        return new_env_state
+    
+    return perform_random_edit_seqs
+        
+
 
 
 def make_create_eval_env():
