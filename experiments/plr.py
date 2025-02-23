@@ -264,7 +264,7 @@ def main(config=None):
     if config["ued"]["replay_prob"] == 0.0:
         my_name = "DR"
     elif config["ued"]["use_accel"]:
-        my_name = "ACCEL"
+        my_name = "ACCEL-" + config["ued"]["edit_method"]
 
     time_start = time.time()
     config = normalise_config(config, my_name)
