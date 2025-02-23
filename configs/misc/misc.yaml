@@ -1,6 +1,6 @@
 group: "accel-reproduce"
 group_auto_prefix: ""
-save_path: "checkpoints/kinetix/accel/mmp"
+save_path: "checkpoints/kinetix/accel/human"
 use_wandb: true
 save_policy: true
 wandb_project: "kinetix-accel"

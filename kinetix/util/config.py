@@ -140,7 +140,7 @@ def normalise_config(config, name, editor_config=False):
             nsteps = nsteps // 1000
             letter = "B"
         config["run_name"] = (
-            config["env_name"] + f"-{name}-" + str(nsteps) + letter + "-" + str(config["num_train_envs"])
+            config["env_name"] + f"-{name}-" + str(nsteps) + letter + "-" + str(config["num_train_envs"]) + "-seed" + str(config["seed"])
         )
 
         if config["checkpoint_save_freq"] >= config["num_updates"]:
