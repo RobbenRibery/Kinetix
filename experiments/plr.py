@@ -20,6 +20,7 @@ from kinetix.environment.ued.distributions import (
 from kinetix.environment.ued.ued import (
     make_mutate_env,
     make_mutate_env_with_mmp,
+    make_mutate_env_with_mmp_comp,
     make_reset_train_function_with_mutations,
     make_vmapped_filtered_level_sampler,
 )
@@ -535,6 +536,8 @@ def main(config=None):
         mutate_world = make_mutate_env(static_env_params, env_params, ued_params)
     elif config["edit_method"] == "mmp":
         mutate_world = make_mutate_env_with_mmp(static_env_params, env_params, ued_params)
+    elif config["edit_method"] == "mmp_comp":
+        mutate_world = make_mutate_env_with_mmp_comp(static_env_params, env_params, ued_params)
     else:
         raise ValueError(f"Unknown edit_method: {config['edit_method']}")
 
