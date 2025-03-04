@@ -46,7 +46,7 @@ from kinetix.environment.ued.editor_o3_mini_8inner_v1 import (
     mmp_disable_motor_auto,
     mmp_enable_motor_auto,
 )
-from kinetix.environment.ued import editor_o3_mini_10inner_comp_v2
+from kinetix.environment.ued import editor_o3_mini_10inner_comp_v2, editor_o3_mini_10inner_overlooked_v1
 from kinetix.environment.ued.ued_state import UEDParams
 from kinetix.environment.utils import permute_pcg_state
 from kinetix.pcg.pcg import env_state_to_pcg_state, sample_pcg_state
@@ -173,16 +173,21 @@ def make_mutate_env_with_mmp(static_env_params: StaticEnvParams, params: EnvPara
     return perform_random_edit_seqs
         
 
-def make_mutate_env_with_mmp_comp(static_env_params: StaticEnvParams, params: EnvParams, ued_params: UEDParams):
+def make_mutate_env_with_mmp_comp_overlooked(static_env_params: StaticEnvParams, params: EnvParams, ued_params: UEDParams):
 
     editors = [
-        editor_o3_mini_10inner_comp_v2.mmp_enable_motor_auto,
-        editor_o3_mini_10inner_comp_v2.mmp_disable_motor_auto,
-        editor_o3_mini_10inner_comp_v2.mmp_reduce_densities,
-        editor_o3_mini_10inner_comp_v2.mmp_increase_densities,
-        editor_o3_mini_10inner_comp_v2.mmp_reduce_gravity,
-        editor_o3_mini_10inner_comp_v2.mmp_increase_gravity,
-        editor_o3_mini_10inner_comp_v2.mmp_randomize_thruster_bindings,
+        editor_o3_mini_10inner_overlooked_v1.mmp_enable_auto_control,
+        editor_o3_mini_10inner_overlooked_v1.mmp_disable_auto_control,
+        editor_o3_mini_10inner_overlooked_v1.mmp_reduce_density,
+        editor_o3_mini_10inner_overlooked_v1.mmp_increase_density,
+        editor_o3_mini_10inner_overlooked_v1.mmp_deactivate_random_polygon,
+        editor_o3_mini_10inner_overlooked_v1.mmp_activate_random_polygon,
+        editor_o3_mini_10inner_overlooked_v1.mmp_increase_spacing,
+        editor_o3_mini_10inner_overlooked_v1.mmp_decrease_spacing,
+        editor_o3_mini_10inner_overlooked_v1.mmp_reduce_negative_roles,
+        editor_o3_mini_10inner_overlooked_v1.mmp_increase_negative_roles,
+        editor_o3_mini_10inner_overlooked_v1.mmp_increase_friction,
+        editor_o3_mini_10inner_overlooked_v1.mmp_decrease_friction,
     ]
     
     def perform_random_edit_seqs(
