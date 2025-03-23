@@ -246,9 +246,7 @@ def sample_trajectories_rnn(
     Tuple[Observation, chex.Array, chex.Array, chex.Array, chex.Array, chex.Array, dict],
 ]:
     """This samples trajectories from the environment using the agent specified by the `train_state`.
-
     Args:
-
         rng (chex.PRNGKey): Singleton
         env (UnderspecifiedEnv):
         env_params (EnvParams):
@@ -260,7 +258,14 @@ def sample_trajectories_rnn(
         max_episode_length (int): The maximum episode length, i.e., the number of steps to do the rollouts for.
 
     Returns:
-        Tuple[Tuple[chex.PRNGKey, TrainState, chex.ArrayTree, Observation, EnvState, chex.Array], Tuple[Observation, chex.Array, chex.Array, chex.Array, chex.Array, chex.Array, dict]]: (rng, train_state, hstate, last_obs, last_env_state, last_value), traj, where traj is (obs, action, reward, done, log_prob, value, info). The first element in the tuple consists of arrays that have shapes (NUM_ENVS, ...) (except `rng` and and `train_state` which are singleton). The second element in the tuple is of shape (NUM_STEPS, NUM_ENVS, ...), and it contains the trajectory.
+        Tuple[Tuple[chex.PRNGKey, TrainState, chex.ArrayTree, Observation, EnvState, chex.Array], 
+        Tuple[Observation, chex.Array, chex.Array, chex.Array, chex.Array, chex.Array, dict]]: 
+        (rng, train_state, hstate, last_obs, last_env_state, last_value), traj,
+        where traj is (obs, action, reward, done, log_prob, value, info). \
+        The first element in the tuple consists of arrays that have shapes (NUM_ENVS, ...) 
+        (except `rng` and and `train_state` which are singleton). \
+        The second element in the tuple is of shape (NUM_STEPS, NUM_ENVS, ...), 
+        and it contains the trajectory.
     """
 
     def sample_step(carry, _):
