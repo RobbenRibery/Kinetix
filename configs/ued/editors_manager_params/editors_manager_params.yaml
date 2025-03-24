@@ -1,0 +1,27 @@
+env_name: Kinetix
+env_entry_point: kinetix.environment.env.BasePhysicsEnv:KinetixEntityMultiDiscreteActions
+env_source_files:
+  - kinetix/environment/env_state.py
+  - kinetix/environment/env.py
+  - kinetix/environment/ued/distributions.py
+  - kinetix/environment/ued/ued_state.py
+  - kinetix/environment/ued/util.py
+
+env_var: env_state
+env_var_type: EnvState
+out_dir: mutators/kinetix
+out_filename: mutator_o3_mini_10inner_concensus.py
+
+llm_name: o3-mini
+max_tokens: 4096
+temperature: 1.0
+max_correction_retry: 6
+engine_statement: We use the jax2d physics engine to simulate the dynamics of the environment.
+
+n_edits: 3
+n_editor_rollouts: 16
+init_editors: true
+maker_template: EditorMaker
+verbose: true
+
+num_inner_loops: 10

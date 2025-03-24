@@ -68,6 +68,8 @@ from kinetix.util.saving import (
     save_model_to_wandb,
 )
 
+from editax.moed import EditorManager
+
 
 class UpdateState(IntEnum):
     DR = 0
@@ -128,8 +130,6 @@ class TrainState(BaseTrainState):
 # region PPO helper functions
 
 # endregion
-
-
 def train_state_to_log_dict(train_state: TrainState, level_sampler: LevelSampler) -> dict:
     """To prevent the entire (large) train_state to be copied to the CPU when doing logging, this function returns all of the important information in a dictionary format.
 
@@ -265,7 +265,16 @@ def main(config=None):
     if config["ued"]["replay_prob"] == 0.0:
         my_name = "DR"
     elif config["ued"]["use_accel"]:
-        my_name = "ACCEL-" + config["ued"]["edit_method"]
+
+        edit_method = config["ued"]["edit_method"]
+        
+        if edit_method == "human":
+            my_name = "ACCEL-human"
+        else:
+            my_name = "ACCEL-" + edit_method
+            editor_manger_parms = config["ued"]["editors_manager_params"]
+            from pprint import pprint
+            pprint(editor_manger_parms)
 
     time_start = time.time()
     config = normalise_config(config, my_name)
@@ -514,7 +523,12 @@ def main(config=None):
         sample_random_level = make_sample_random_level()
 
     sample_random_levels = make_vmapped_filtered_level_sampler(
-        sample_random_level, env_params, static_env_params, config, make_pcg_state=False, env=env
+        sample_random_level, 
+        env_params, 
+        static_env_params, 
+        config, 
+        make_pcg_state=False, 
+        env=env,
     )
 
     def generate_world():
@@ -534,10 +548,24 @@ def main(config=None):
 
     if config["edit_method"] == "human":
         mutate_world = make_mutate_env(static_env_params, env_params, ued_params)
-    elif config["edit_method"] == "mmp":
-        mutate_world = make_mutate_env_with_mmp(static_env_params, env_params, ued_params)
-    elif config["edit_method"] == "mmp_comp_overlooked":
-        mutate_world = make_mutate_env_with_mmp_comp_overlooked(static_env_params, env_params, ued_params)
+    
+    elif "mmp" in config["edit_method"]:
+        num_inner_loops = editor_manger_parms.pop("num_inner_loops", 10)
+        
+        editor_manager = EditorManager(**editor_manger_parms)
+        _ = editor_manager.reset(
+            num_inner_loops=num_inner_loops,
+            dummy_env_state=create_random_starting_distribution(
+                jax.random.PRNGKey(0), 
+                env_params, 
+                static_env_params, 
+                ued_params, 
+                1,
+                controllable=True
+             ),
+        )
+        
+        mutate_world = editor_manager.perform_random_edits
     else:
         raise ValueError(f"Unknown edit_method: {config['edit_method']}")
 
